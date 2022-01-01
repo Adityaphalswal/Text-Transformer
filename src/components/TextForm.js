@@ -25,8 +25,8 @@ export default function TextForm(props) {
   const handleCopy = () => {
     var text = document.getElementById("myBox");
     text.select();
-    text.setSelectionRange(0, 999);
     navigator.clipboard.writeText(text.value);
+    document.getSelection().removeAllRanges();
     props.showAlert("Copied to Clipboard!", "success");
   };
 
@@ -45,7 +45,7 @@ export default function TextForm(props) {
           color: props.mode === "dark" ? "white" : "black",
         }}
       >
-        <h1>{props.heading}</h1>
+        <h1 className="mb-4">{props.heading}</h1>
         <div className="mb-3">
           <textarea
             className="form-control"
@@ -59,19 +59,22 @@ export default function TextForm(props) {
             rows="8"
           ></textarea>
         </div>
-        <button className="btn btn-primary mx-1" onClick={handleUpClick}>
+        <button className="btn btn-primary my-1 mx-1" onClick={handleUpClick}>
           Convert to UpperCase
         </button>
-        <button className="btn btn-primary mx-1" onClick={handleLowClick}>
+        <button className="btn btn-primary my-1 mx-1" onClick={handleLowClick}>
           Convert to LowerCase
         </button>
-        <button className="btn btn-primary mx-1" onClick={handleClear}>
+        <button className="btn btn-primary my-1 mx-1" onClick={handleClear}>
           Clear Text
         </button>
-        <button className="btn btn-primary mx-1" onClick={handleCopy}>
+        <button className="btn btn-primary my-1 mx-1" onClick={handleCopy}>
           Copy Text
         </button>
-        <button className="btn btn-primary mx-1" onClick={handleExtraSpaces}>
+        <button
+          className="btn btn-primary my-1 mx-1"
+          onClick={handleExtraSpaces}
+        >
           Remove Extra Spaces
         </button>
       </div>
@@ -88,17 +91,21 @@ export default function TextForm(props) {
               return element.length !== 0;
             }).length
           }{" "}
-          words , {text.length} characters {text.split(".").length - 1} and
+          words , {text.length} characters and {text.split(".").length - 1}{" "}
           Sentence
         </p>
 
-        <p>{(0.008 * text.split(" ").length).toFixed(3)} Minutes read</p>
-        <h2>Preview</h2>
         <p>
-          {text.length > 0
-            ? text
-            : "Enter Text in the textbox above to preview it here"}
+          {(
+            0.008 *
+            text.split(" ").filter((element) => {
+              return element.length !== 0;
+            }).length
+          ).toFixed(3)}{" "}
+          Minutes read
         </p>
+        <h2>Preview</h2>
+        <p>{text.length > 0 ? text : "Nothing to Preview"}</p>
       </div>
     </>
   );
